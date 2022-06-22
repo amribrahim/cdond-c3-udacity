@@ -208,6 +208,7 @@ jobs:
                 curl --header "content-length:0" -X POST https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/hu7t36py^C/migration_${CIRCLE_WORKFLOW_ID:0:7}/1
             else
                 curl --header "content-length:0" -X POST https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/hu7t36py^C/migration_${CIRCLE_WORKFLOW_ID:0:7}/0
+            fi
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
   deploy-frontend:
