@@ -32,7 +32,7 @@ commands:
           working_directory: ./backend
           command: |
             SUCESS=$(curl https://keyvalue.immanuel.co/api/KeyVal/GetValue/hu7t36py^C/DB_MIGRATION_<< parameters.id >>)
-            if [[ "$SUCCESS" == "success" ]]
+            if [[ "$SUCCESS" == 1 ]]
             then
               npm run migrations:revert
             fi
