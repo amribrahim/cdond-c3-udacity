@@ -210,7 +210,6 @@ jobs:
                 curl --header "content-length:0" -X POST https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/hu7t36py^C/migration_${CIRCLE_WORKFLOW_ID:0:7}/1
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
-          when: on_fail
   deploy-frontend:
     docker:
       - image: circleci/node:13.8.0
