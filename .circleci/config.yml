@@ -19,7 +19,24 @@ commands:
             aws s3 rm s3://udapeople-<< parameters.id >> --recursive
             aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.id >>
 
-
+  revert_migrations:
+    description: Revert the last migration if successfully run in the current workflow.
+    parameters:
+      when:
+        type: string
+      id:
+        type: string
+    steps:
+      - run:
+          name: Revert migrations
+          working_directory: ./backend
+          command: |
+            SUCESS=$(curl https://keyvalue.immanuel.co/api/KeyVal/GetValue/hu7t36py^C/DB_MIGRATION_<< parameters.id >>)
+            if [[ "$SUCCESS" == "success" ]]
+            then
+              npm run migrations:revert
+            fi
+          when: << parameters.when >>
             
 jobs:
   build-frontend:
@@ -186,11 +203,54 @@ jobs:
           name: Send migration results to memstash
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
+            # i will use https://keyvalue.immanuel.co/ as memstash did not open and kvdb require money
             then
-                curl -H "Content-Type: text/plain" -H "token: 7933fe63-4687-4fa1-8426-aa25aa1730ec" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7}     
-     - destroy_environment:
+                curl --header "content-length:0" -X POST https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/hu7t36py^C/migration_${CIRCLE_WORKFLOW_ID:0:7}/1
+            else
+                curl --header "content-length:0" -X POST https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/hu7t36py^C/migration_${CIRCLE_WORKFLOW_ID:0:7}/1
+      - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
           when: on_fail
+  deploy-frontend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install AWS CLI dependencies
+          working_directory: /tmp
+          command: |
+            sudo apt-get update && sudo apt-get install -yy less
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+      - run:
+          name: Rebuild frontend with backend API Url
+          working_directory: ./frontend
+          command: |
+            export BACKEND_IP=$(aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --output text)
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "API_URL = ${API_URL}"
+            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
+            cat frontend/.env
+            npm run build
+      - run:
+          name: Deploy frontend objects to S3
+          working_directory: ./frontend
+          command: |
+            aws s3 cp ./dist "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
+      - persist_to_workspace:
+          root: .
+          paths:
+            - frontend/dist
+      - destroy_environment:
+          id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert_migrations:
+          id: ${CIRCLE_WORKFLOW_ID:0:7}
 
           
 workflows:
@@ -210,3 +270,5 @@ workflows:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
+      - run-migrations:
+         requires: [test-frontend, test-backend, scan-frontend, scan-backend, deploy-infrastructure]
