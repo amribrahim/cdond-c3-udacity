@@ -219,7 +219,7 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Install AWS CLI dependencies
+          name: Install dependencies
           working_directory: /tmp
           command: |
             sudo apt-get update && sudo apt-get install -yy less
@@ -227,7 +227,7 @@ jobs:
             unzip awscliv2.zip
             sudo ./aws/install
       - run:
-          name: Rebuild frontend with backend API Url
+          name: Get backend url
           working_directory: ./frontend
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances \
@@ -237,11 +237,12 @@ jobs:
             echo "API_URL = ${API_URL}"
             echo API_URL="http://${BACKEND_IP}:3030" >> .env
             cat .env
-            npm run build
       - run:
-          name: Deploy frontend objects to S3
+          name: Deploy frontend objects
           working_directory: ./frontend
           command: |
+            npm install
+            npm run build
             aws s3 cp ./dist "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
       - persist_to_workspace:
           root: .
