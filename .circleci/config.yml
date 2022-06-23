@@ -274,9 +274,8 @@ jobs:
       - run:
           name: Deploy backend
           no_output_timeout: 20m
-          working_directory: ./.circleci/ansible
           command: |
-            cd ../../backend
+            cd backend
             npm i
             npm run build
             cd ..
