@@ -273,8 +273,15 @@ jobs:
             aws --version
       - run:
           name: Deploy backend
+          no_output_timeout: 20m
           working_directory: ./.circleci/ansible
           command: |
+            cd ../../backend
+            npm i
+            npm run build
+            cd ..
+            # Zip the directory
+            tar -C backend -czvf artifact.tar.gz .
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --output text >> inventory.txt
