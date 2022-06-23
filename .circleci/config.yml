@@ -280,7 +280,7 @@ jobs:
             npm run build
             # Zip the directory
             tar -C backend -czvf artifact.tar.gz .
-       - run:
+      - run:
           name: run ansible and extract files
           working_directory: ./.circleci/ansible
           no_output_timeout: 20m
