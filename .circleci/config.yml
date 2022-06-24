@@ -269,13 +269,15 @@ jobs:
             ansible --version
             pip install awscli
             aws --version
-            ls
-            cd backend
+            echo "list all files and dir"
+            ls 
+            pwd
             npm i
             npm run build
             # Zip the directory
             tar -C backend -czvf artifact.tar.gz .
-            ls
+            ls pwd
+            
             cd ../.circle/ansible
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
