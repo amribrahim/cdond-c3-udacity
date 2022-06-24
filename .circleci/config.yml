@@ -265,7 +265,7 @@ jobs:
           name: Install dependencies and deploy backend
           no_output_timeout: 20m
           command: |
-            apk add --update ansible curl rsync openssh nodejs npm
+            apk add --update ansible curl rsync openssh nodejs npm git
             ansible --version
             git --version
             pip install awscli
