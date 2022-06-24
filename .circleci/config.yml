@@ -269,6 +269,7 @@ jobs:
             ansible --version
             pip install awscli
             aws --version
+            ls
             cd backend
             npm i
             npm run build
