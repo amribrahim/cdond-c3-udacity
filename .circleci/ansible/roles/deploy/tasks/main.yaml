@@ -15,7 +15,7 @@
   become: yes
   command: "ls /home/ubuntu/app/"
   
-  - name: "list dirs"
+- name: "list dirs"
   become: yes
   shell:
     cmd: apt update && apt install nodejs npm -y && npm install pm2 -g
