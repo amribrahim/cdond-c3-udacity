@@ -261,8 +261,6 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["fe:ef:24:ff:c8:7e:9d:c6:e7:ec:38:4d:50:7a:fc:97"]
-  #    - attach_workspace:
-   #       at: .
       - run:
           name: Install dependencies and deploy backend
           no_output_timeout: 20m
@@ -271,7 +269,7 @@ jobs:
             ansible --version
             pip install awscli
             aws --version
-           cd backend
+            cd backend
             npm i
             npm run build
             # Zip the directory
