@@ -281,7 +281,7 @@ jobs:
             tar -C backend -czvf artifact.tar.gz .
             ls 
             pwd
-            cd ../.circle/ansible
+            cd ./.circle/ansible
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --output text >> inventory.txt
