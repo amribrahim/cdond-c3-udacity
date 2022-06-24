@@ -279,7 +279,8 @@ jobs:
             # Zip the directory
             cd ..
             tar -C backend -czvf artifact.tar.gz .
-            ls pwd
+            ls 
+            pwd
             cd ../.circle/ansible
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
