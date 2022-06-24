@@ -274,7 +274,7 @@ jobs:
             ls 
             pwd
             cd backend
-            npm i
+            npm npm install
             npm run build
             # Zip the directory
             tar -C backend -czvf artifact.tar.gz .
