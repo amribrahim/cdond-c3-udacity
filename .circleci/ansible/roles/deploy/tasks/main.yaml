@@ -19,17 +19,11 @@
   become: true
   apt:
     upgrade: "yes"
-
-- name: "install dependencies."
-  become: true
-  apt:
-    name: ["nodejs", "npm"]
-    state: latest
-    update_cache: yes
     
-- name "upgrade npm and node"
+- name "install npm and node"
   become: yes
-  command: npm install -g n && n latest && npm install -g npm@latest
+  command: curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash - &&  apt install nodejs
+    
     
 - name: "install dependencies."
   become: yes
