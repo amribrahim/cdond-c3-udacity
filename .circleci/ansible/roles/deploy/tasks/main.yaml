@@ -33,7 +33,7 @@
     name: pm2
     global: yes
     production: yes
-    state: present
+    state: latest
 
 - name: "Start backend with pm2"
   become: yes
