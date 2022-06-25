@@ -15,19 +15,13 @@
   become: yes
   command: "ls /home/ubuntu/app/"
   
-- name: "upgrade packages."
-  become: true
-  apt:
-    upgrade: "yes"
-    
-- name: "install npm and node"
-  become: yes
-  command: curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash - &&  apt install nodejs
-    
-    
+- name: install node 
+  shell: |
+    curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash - && sudo apt-get install -y nodejs
+           
 - name: "install dependencies."
-  become: yes
-  command: npm install pm2 -g
+  shell: |
+    sudo npm install pm2 -g
  
 - name: "Start backend with pm2"
   become: yes
