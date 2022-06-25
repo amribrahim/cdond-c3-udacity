@@ -20,7 +20,7 @@
   apt:
     upgrade: "yes"
     
-- name "install npm and node"
+- name: "install npm and node"
   become: yes
   command: curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash - &&  apt install nodejs
     
