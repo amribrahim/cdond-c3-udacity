@@ -27,7 +27,7 @@
   become: yes
   shell: |
     cd /home/ubuntu/app/dist
-    pm2 start  main.js
+    NODE_PORT=3030 pm2 start -i 0 main.js
   environment:
     ENVIRONMENT: production
     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
