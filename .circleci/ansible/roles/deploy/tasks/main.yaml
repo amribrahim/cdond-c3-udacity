@@ -15,16 +15,25 @@
   become: yes
   command: "ls /home/ubuntu/app/"
   
-- name: "list dirs"
-  become: yes
-  shell:
-    cmd: apt update && apt install nodejs npm -y && npm install pm2 -g
-    chdir: /home/ubuntu/app
- 
-- name: "NPM Install"
-  shell:
-    cmd: npm install --production
-    chdir: /home/ubuntu/app
+- name: "upgrade packages."
+  become: true
+  apt:
+    upgrade: "yes"
+
+- name: "install dependencies."
+  become: true
+  apt:
+    name: ["nodejs", "npm"]
+    state: latest
+    update_cache: yes
+
+- name: "install pm2"
+  become: true
+  npm:
+    name: pm2
+    global: yes
+    production: yes
+    state: present
 
 - name: "Start backend with pm2"
   become: yes
