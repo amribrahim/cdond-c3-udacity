@@ -279,8 +279,9 @@ jobs:
             npm install
             npm run build
             # Zip the directory
-            cd ..
-            tar -C backend -czvf artifact.tar.gz .
+            #cd ..
+           # tar -C backend -czvf artifact.tar.gz .
+            tar -C dist -czvf artifact.tar.gz .
             ls 
             pwd
             cd .circleci/ansible
