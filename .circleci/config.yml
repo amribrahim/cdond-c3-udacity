@@ -177,8 +177,7 @@ jobs:
             apk add --update ansible curl
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
-            chmod 777 -r ./aws/install
-            ./aws/install
+            sudo ./aws/install
       - run:
           name: Configure server
           command: |
