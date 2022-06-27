@@ -7,16 +7,10 @@
 - name: "Copy backend build folder to EC2"
   become: yes
   unarchive:
-    src: /root/project/backend/artifact.tar.gz
+    src: /root/project/artifact.tar.gz
     dest: /home/ubuntu/app
   
-- name: "copy node_modules"
-  become: yes
-  synchronize:
-    src: /root/project/backend/node_modules
-    dest: /home/ubuntu/app/
-    recursive: true
-    
+   
 - name: "list dirs"
   become: yes
   command: "ls /home/ubuntu/app/"
@@ -38,13 +32,13 @@
   shell: |
     pm2 start ./main.js
   args:
-      chdir: /home/ubuntu/app
+      chdir: /home/ubuntu/app/dist
   environment:
     ENVIRONMENT: production
     TYPEORM_CONNECTION: postgres
-    TYPEORM_ENTITIES: /home/ubuntu/app/modules/domain/**/*.entity{.ts,.js}
-    TYPEORM_MIGRATIONS_DIR: /home/ubuntu/app/migrations
-    TYPEORM_MIGRATIONS: /home/ubuntu/app/migrations/*.js
+    TYPEORM_ENTITIES: /home/ubuntu/app/backend/modules/dist/domain/**/*.entity{.ts,.js}
+    TYPEORM_MIGRATIONS_DIR: /home/ubuntu/app/backend/dist/migrations
+    TYPEORM_MIGRATIONS: /home/ubuntu/app/backend/dist/migrations/*.js
     TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST') }}"
     TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_PORT') }}"
     TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME') }}"
