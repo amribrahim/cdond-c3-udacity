@@ -11,11 +11,11 @@
     dest: /home/ubuntu/app/
   
 - name: "copy node_modules"
-    become: yes
-    synchronize:
-      src: /root/project/backend/node_modules
-      dest: /home/ubuntu/app/
-      recursive: true
+  become: yes
+  synchronize:
+    src: /root/project/backend/node_modules
+    dest: /home/ubuntu/app/
+    recursive: true
     
 - name: "list dirs"
   become: yes
