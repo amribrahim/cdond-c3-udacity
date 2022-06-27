@@ -8,7 +8,7 @@
   become: yes
   unarchive:
     src: /root/project/backend/artifact.tar.gz
-    dest: /home/ubuntu/app/
+    dest: /home/ubuntu/app
   
 - name: "copy node_modules"
   become: yes
@@ -38,7 +38,7 @@
   shell: |
     pm2 start ./main.js
   args:
-      chdir: /home/ubuntu/app/dist
+      chdir: /home/ubuntu/app
   environment:
     ENVIRONMENT: production
     TYPEORM_CONNECTION: postgres
