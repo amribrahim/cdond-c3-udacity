@@ -271,10 +271,10 @@ jobs:
             pip install awscli
             aws --version
             echo "list all files and dir"
-            ls 
-            pwd
+            cd backend
             npm install
             npm run build
+            cd -
             # Zip the directory
             tar -C backend -czvf artifact.tar.gz .
             ls 
