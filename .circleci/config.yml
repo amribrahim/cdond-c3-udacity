@@ -263,7 +263,6 @@ jobs:
           fingerprints: ["fe:ef:24:ff:c8:7e:9d:c6:e7:ec:38:4d:50:7a:fc:97"]
       - run:
           name: Install dependencies and deploy backend
-          working_directory: ./backend
           no_output_timeout: 20m
           command: |
             apk add --update ansible curl rsync openssh nodejs npm git
@@ -277,10 +276,10 @@ jobs:
             npm install
             npm run build
             # Zip the directory
-            tar -C dist -czvf artifact.tar.gz .
+            tar -C backend -czvf artifact.tar.gz .
             ls 
             pwd
-            cd ../.circleci/ansible
+            cd /root/project/.circleci/ansible
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --output text >> inventory.txt
