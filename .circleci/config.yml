@@ -173,8 +173,8 @@ jobs:
           fingerprints: ["fe:ef:24:ff:c8:7e:9d:c6:e7:ec:38:4d:50:7a:fc:97"]
       - run:
           name: Install dependencies
-          command: |
-            apk add --update ansible
+          command: | 
+            apk add --update ansible curl
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             chmod 777 -r ./aws/install
