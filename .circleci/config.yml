@@ -154,13 +154,17 @@ jobs:
                --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
       - run:
           name: Add back-end ip to ansible inventory
-          working_directory: ./.circleci/ansible
+          working_directory: .
           command: |
+            cd  ./.circleci/ansible
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
             --output text >> inventory.txt
             cat inventory.txt
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./.circleci/ansible/inventory.txt
       - destroy_environment: 
           id: ${CIRCLE_WORKFLOW_ID:0:7}
           
@@ -171,22 +175,16 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["fe:ef:24:ff:c8:7e:9d:c6:e7:ec:38:4d:50:7a:fc:97"]
+      - attach_workspace:
+          at: .
       - run:
           name: Install dependencies
-          command: | 
-            apk add --update ansible curl
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            ./aws/install
+          command: |
+            apk add --update ansible
       - run:
           name: Configure server
           command: |
-            aws ec2 describe-instances \
-            --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-            --output text >> .circleci/ansible/inventory.txt
-            cd .circleci/ansible
-            ansible-playbook -i inventory.txt configure-server.yml
+            ansible-playbook -i ./.circleci/ansible/inventory.txt configure-server.yml
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
          
