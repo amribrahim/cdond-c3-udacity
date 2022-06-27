@@ -158,7 +158,6 @@ jobs:
           command: |
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --filters "Name=tag:project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
             --output text >> inventory.txt
             cat inventory.txt
       - persist_to_workspace:
@@ -233,7 +232,6 @@ jobs:
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --filters "Name=tag:project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
             --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "API_URL = ${API_URL}"
@@ -265,6 +263,7 @@ jobs:
           fingerprints: ["fe:ef:24:ff:c8:7e:9d:c6:e7:ec:38:4d:50:7a:fc:97"]
       - run:
           name: Install dependencies and deploy backend
+          working_directory: ./backend
           no_output_timeout: 20m
           command: |
             apk add --update ansible curl rsync openssh nodejs npm git
@@ -275,18 +274,15 @@ jobs:
             echo "list all files and dir"
             ls 
             pwd
-            cd backend
             npm install
             npm run build
             # Zip the directory
-            #cd ..
             tar -C dist -czvf artifact.tar.gz .
             ls 
             pwd
             cd ../.circleci/ansible
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --filters "Name=tag:project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
             --output text >> inventory.txt
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml -vvv
