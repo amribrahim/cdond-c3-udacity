@@ -1,0 +1,7 @@
+1- Repo: https://github.com/amribrahim/cdond-c3-udacity
+2- backend: http://44.203.131.217:3030/api/status
+3- frontend: http://udapeople-a81f6e7.s3-website-us-east-1.amazonaws.com
+4- cloudfront: https://d3g0znbexq1rnl.cloudfront.net
+5- promethous: http://34.203.42.60:9090/
+6- alertmanager: http://34.203.42.60:9093/
+
